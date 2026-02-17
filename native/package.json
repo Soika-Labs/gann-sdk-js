@@ -1,6 +1,6 @@
 {
   "name": "@soika/gann-sdk-quic-native",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Native (Rust) QUIC bindings for @soika/gann-sdk (prebuilt via napi-rs)",
   "license": "Apache-2.0",
   "type": "commonjs",
@@ -28,8 +28,8 @@
     }
   },
   "optionalDependencies": {
-    "@soika/gann-sdk-quic-native-win32-x64-msvc": "0.1.0",
-    "@soika/gann-sdk-quic-native-darwin-x64": "0.1.0",
-    "@soika/gann-sdk-quic-native-linux-x64-gnu": "0.1.0"
+    "@soika/gann-sdk-quic-native-win32-x64-msvc": "0.1.1",
+    "@soika/gann-sdk-quic-native-darwin-x64": "0.1.1",
+    "@soika/gann-sdk-quic-native-linux-x64-gnu": "0.1.1"
   }
 }

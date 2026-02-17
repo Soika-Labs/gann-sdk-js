@@ -4,9 +4,19 @@ const { execFileSync } = require("node:child_process");
 
 const { getPlatformArchABI } = require("./platform");
 
-function getNapiBin() {
+function runNapi(args, options) {
+  if (process.env.npm_execpath) {
+    execFileSync(
+      process.execPath,
+      [process.env.npm_execpath, "exec", "--", "napi", ...args],
+      options
+    );
+    return;
+  }
+
   const ext = process.platform === "win32" ? ".cmd" : "";
-  return path.join(__dirname, "..", "node_modules", ".bin", `napi${ext}`);
+  const napiBin = path.join(__dirname, "..", "node_modules", ".bin", `napi${ext}`);
+  execFileSync(napiBin, args, options);
 }
 
 function main() {
@@ -22,9 +32,7 @@ function main() {
     NAPI_TYPE_DEF_TMP_FOLDER: typeDefDir,
   };
 
-  const napiBin = getNapiBin();
-
-  execFileSync(napiBin, ["build", "--platform", "--release", npmPlatformDir], {
+  runNapi(["build", "--platform", "--release", npmPlatformDir], {
     stdio: "inherit",
     env,
   });
