@@ -15,6 +15,8 @@ jobs:
   build-native:
     name: Build native (${{ matrix.platform_dir }})
     runs-on: ${{ matrix.os }}
+    env:
+      GANN_PLATFORM_ARCH_ABI: ${{ matrix.platform_dir }}
     strategy:
       fail-fast: false
       matrix:

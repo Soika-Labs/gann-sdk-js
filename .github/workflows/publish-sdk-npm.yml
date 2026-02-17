@@ -28,6 +28,12 @@ jobs:
       - name: Build SDK
         run: npm run build
 
+      - name: Configure npm auth
+        run: |
+          node -e "const fs=require('fs');const os=require('os');const path=require('path');const npmrc=path.join(os.homedir(),'.npmrc');fs.appendFileSync(npmrc,`//registry.npmjs.org/:_authToken=${process.env.NODE_AUTH_TOKEN}\nalways-auth=true\n`);"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Publish SDK
         run: npm run publish:sdk:npm
         env:

@@ -17,6 +17,8 @@ jobs:
   publish-platform:
     name: Publish platform (${{ matrix.platform_dir }})
     runs-on: ${{ matrix.os }}
+    env:
+      GANN_PLATFORM_ARCH_ABI: ${{ matrix.platform_dir }}
     strategy:
       fail-fast: false
       matrix:
@@ -49,6 +51,12 @@ jobs:
         run: npm run prepare:npm
         working-directory: native
 
+      - name: Configure npm auth
+        run: |
+          node -e "const fs=require('fs');const os=require('os');const path=require('path');const npmrc=path.join(os.homedir(),'.npmrc');fs.appendFileSync(npmrc,`//registry.npmjs.org/:_authToken=${process.env.NODE_AUTH_TOKEN}\nalways-auth=true\n`);"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Publish platform package
         run: npm run publish:platform
         working-directory: native
@@ -74,6 +82,12 @@ jobs:
       - name: Install native dependencies
         run: npm ci
         working-directory: native
+
+      - name: Configure npm auth
+        run: |
+          node -e "const fs=require('fs');const os=require('os');const path=require('path');const npmrc=path.join(os.homedir(),'.npmrc');fs.appendFileSync(npmrc,`//registry.npmjs.org/:_authToken=${process.env.NODE_AUTH_TOKEN}\nalways-auth=true\n`);"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish main native package
         run: npm run publish:package
