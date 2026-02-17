@@ -1,0 +1,33 @@
+{
+  "name": "@soika/gann-sdk-quic-native",
+  "version": "0.1.0",
+  "description": "Native (Rust) QUIC bindings for @soika/gann-sdk (prebuilt via napi-rs)",
+  "license": "Apache-2.0",
+  "type": "commonjs",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "*.node"
+  ],
+  "scripts": {
+    "build": "node scripts/build.js",
+    "prepare:npm": "npm run build && node scripts/prepublish.js --dry-run",
+    "publish:npm": "node scripts/prepublish.js --publish"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^2.18.4"
+  },
+  "napi": {
+    "name": "gann_js_quic_native",
+    "triples": {
+      "defaults": true
+    }
+  },
+  "optionalDependencies": {
+    "@soika/gann-sdk-quic-native-win32-x64-msvc": "0.1.0",
+    "@soika/gann-sdk-quic-native-darwin-x64": "0.1.0",
+    "@soika/gann-sdk-quic-native-linux-x64-gnu": "0.1.0"
+  }
+}

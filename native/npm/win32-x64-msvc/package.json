@@ -1,0 +1,16 @@
+{
+  "name": "@soika/gann-sdk-quic-native-win32-x64-msvc",
+  "version": "0.1.0",
+  "os": [
+    "win32"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "main": "gann_js_quic_native.win32-x64-msvc.node",
+  "files": [
+    "gann_js_quic_native.win32-x64-msvc.node"
+  ],
+  "description": "Native (Rust) QUIC bindings for @soika/gann-sdk (prebuilt via napi-rs)",
+  "license": "Apache-2.0"
+}

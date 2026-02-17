@@ -1,0 +1,36 @@
+{
+  "name": "@soika/gann-sdk",
+  "version": "0.1.0",
+  "description": "JavaScript/TypeScript SDK for the Global Agentic Neural Network (GANN)",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "tsc --noEmit -p tsconfig.json",
+    "test:full-flow": "tsx --tsconfig tsconfig.test.json tests/full_flow.ts"
+  },
+  "keywords": [
+    "gann",
+    "sdk",
+    "agents",
+    "ai"
+  ],
+  "author": "Soika Labs",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "optionalDependencies": {
+    "@soika/gann-sdk-quic-native": "0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "@types/ws": "^8.5.10",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}

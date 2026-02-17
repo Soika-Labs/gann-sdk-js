@@ -1,0 +1,29 @@
+[package]
+name = "gann-js-quic-native"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+# Rust SDK implementation (reference QUIC/relay/E2EE)
+gann-sdk = { path = "../../rust-sdk" }
+
+quinn = { version = "0.11.9", features = ["rustls", "ring"] }
+rustls = "0.23"
+uuid = { version = "1.20.0", features = ["v4", "serde"] }
+
+napi = { version = "3.8.2", features = ["tokio_rt"] }
+napi-derive = "3.5.1"
+
+# Pin transitive MSRV-sensitive crates.
+time = "=0.3.46"
+
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.149"
+
+tokio = { version = "1.49.0", features = ["rt-multi-thread", "macros"] }
+
+[build-dependencies]
+napi-build = "=2.3.1"

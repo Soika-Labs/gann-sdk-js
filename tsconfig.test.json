@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "types": ["node"],
+    "lib": ["ES2020", "DOM"],
+    "moduleResolution": "NodeNext"
+  },
+  "include": ["src", "tests"]
+}
