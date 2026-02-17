@@ -37,5 +37,8 @@ jobs:
       - name: Validate npm token
         run: node -e "if(!process.env.NODE_AUTH_TOKEN){throw new Error('Missing repository secret NPM_TOKEN in workflow environment')}"
 
+      - name: Validate npm login
+        run: npm whoami
+
       - name: Publish SDK
         run: npm run publish:sdk:npm
