@@ -11,6 +11,8 @@ jobs:
   publish-sdk:
     name: Publish @soika/gann-sdk
     runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     steps:
       - name: Checkout
@@ -31,15 +33,9 @@ jobs:
       - name: Configure npm auth
         run: |
           node -e "const fs=require('fs');const os=require('os');const path=require('path');const token=process.env.NODE_AUTH_TOKEN;if(!token) throw new Error('Missing NODE_AUTH_TOKEN');const npmrc=path.join(os.homedir(),'.npmrc');fs.appendFileSync(npmrc,'//registry.npmjs.org/:_authToken='+token+'\nalways-auth=true\n');"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Validate npm token
-        run: node -e "if(!process.env.NODE_AUTH_TOKEN){throw new Error('Missing secrets.NPM_TOKEN in workflow environment')}"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: node -e "if(!process.env.NODE_AUTH_TOKEN){throw new Error('Missing repository secret NPM_TOKEN in workflow environment')}"
 
       - name: Publish SDK
         run: npm run publish:sdk:npm
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
