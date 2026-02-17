@@ -1,0 +1,82 @@
+name: Publish Native to npm
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish_main_package:
+        description: "Publish @soika/gann-sdk-quic-native after platform packages"
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish-platform:
+    name: Publish platform (${{ matrix.platform_dir }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            platform_dir: darwin-x64
+          - os: ubuntu-latest
+            platform_dir: linux-x64-gnu
+          - os: windows-latest
+            platform_dir: win32-x64-msvc
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install native dependencies
+        run: npm ci
+        working-directory: native
+
+      - name: Build and prepare npm artifacts
+        run: npm run prepare:npm
+        working-directory: native
+
+      - name: Publish platform package
+        run: npm run publish:platform
+        working-directory: native
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-main:
+    name: Publish @soika/gann-sdk-quic-native
+    runs-on: ubuntu-latest
+    needs: publish-platform
+    if: ${{ inputs.publish_main_package }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Install native dependencies
+        run: npm ci
+        working-directory: native
+
+      - name: Publish main native package
+        run: npm run publish:package
+        working-directory: native
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

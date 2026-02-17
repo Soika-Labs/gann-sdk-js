@@ -14,7 +14,9 @@
   "scripts": {
     "build": "node scripts/build.js",
     "prepare:npm": "npm run build && node scripts/prepublish.js --dry-run",
-    "publish:npm": "node scripts/prepublish.js --publish"
+    "publish:npm": "node scripts/prepublish.js --publish",
+    "publish:platform": "node scripts/publish-platform.js",
+    "publish:package": "npm publish --access public"
   },
   "devDependencies": {
     "@napi-rs/cli": "^2.18.4"

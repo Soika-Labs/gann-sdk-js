@@ -586,6 +586,8 @@ dependencies = [
 [[package]]
 name = "gann-sdk"
 version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "53a64f448ca6cda541d03784635400c4bbcb326a6f1051d0719d5610815574d3"
 dependencies = [
  "async-stream",
  "async-trait",

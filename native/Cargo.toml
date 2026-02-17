@@ -8,7 +8,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 # Rust SDK implementation (reference QUIC/relay/E2EE)
-gann-sdk = { path = "../../rust-sdk" }
+gann-sdk = "0.1.0"
 
 quinn = { version = "0.11.9", features = ["rustls", "ring"] }
 rustls = "0.23"

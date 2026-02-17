@@ -251,32 +251,61 @@ npm run test:full-flow
 
 ## Publishing to npm
 
-1. Bump `version` in `package.json`.
-2. Build and validate package contents:
+Release order is important:
 
-   ```bash
-   npm ci
-   npm run build
-   npm pack --dry-run
-   ```
+1. Publish native platform packages (`darwin-x64`, `linux-x64-gnu`, `win32-x64-msvc`).
+2. Publish main native package (`@soika/gann-sdk-quic-native`).
+3. Publish SDK package (`@soika/gann-sdk`).
 
-3. Authenticate with npm:
+### One-time setup
 
-   ```bash
-   npm login
-   ```
+1. Configure GitHub Actions secret `NPM_TOKEN` with publish access.
+2. Keep versions aligned:
+  - `native/package.json`
+  - `native/npm/*/package.json`
+  - root `package.json` (when publishing SDK)
 
-4. Publish:
+### CI release (recommended)
 
-   ```bash
-   npm publish --access public
-   ```
+1. Run workflow `Publish Native to npm`.
+2. After native publish succeeds, run workflow `Publish SDK to npm`.
 
-5. Verify install:
+Optional validation workflow: `Native Cross Build` (build-only matrix).
 
-   ```bash
-   npm i @soika/gann-sdk@latest
-   ```
+### Local commands
+
+Build/check SDK:
+
+```bash
+npm ci
+npm run build
+npm pack --dry-run
+```
+
+Build/check native package on current OS:
+
+```bash
+npm --prefix native ci
+npm run prepare:native:npm
+```
+
+Publish native platform package on current OS:
+
+```bash
+npm --prefix native run publish:platform
+```
+
+Publish main native package:
+
+```bash
+npm --prefix native run publish:package
+```
+
+Publish SDK package:
+
+```bash
+npm run publish:sdk:npm
+```
 
 ## Related examples
 

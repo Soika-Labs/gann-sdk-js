@@ -10,6 +10,10 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "build:native": "npm --prefix native run build",
+    "prepare:native:npm": "npm --prefix native run prepare:npm",
+    "publish:native:npm": "npm --prefix native run publish:npm",
+    "publish:sdk:npm": "npm publish --access public",
     "lint": "tsc --noEmit -p tsconfig.json",
     "test:full-flow": "tsx --tsconfig tsconfig.test.json tests/full_flow.ts"
   },

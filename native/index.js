@@ -5,7 +5,14 @@ const path = require("node:path");
 function resolveTriple() {
 	const platform = process.platform;
 	const arch = process.arch;
-	// napi-rs uses Node arch names (x64/arm64) and platform names (darwin/linux/win32)
+	if (platform === "linux") {
+		return `linux-${arch}-gnu`;
+	}
+
+	if (platform === "win32") {
+		return `win32-${arch}-msvc`;
+	}
+
 	return `${platform}-${arch}`;
 }
 

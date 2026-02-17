@@ -1,0 +1,59 @@
+name: Native Cross Build
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "native/**"
+      - ".github/workflows/native-cross-build.yml"
+  pull_request:
+    paths:
+      - "native/**"
+      - ".github/workflows/native-cross-build.yml"
+
+jobs:
+  build-native:
+    name: Build native (${{ matrix.platform_dir }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            platform_dir: darwin-x64
+          - os: ubuntu-latest
+            platform_dir: linux-x64-gnu
+          - os: windows-latest
+            platform_dir: win32-x64-msvc
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install native dependencies
+        run: npm ci
+        working-directory: native
+
+      - name: Build and prepare npm artifacts
+        run: npm run prepare:npm
+        working-directory: native
+
+      - name: Verify platform package output
+        shell: bash
+        run: |
+          test -f "native/npm/${{ matrix.platform_dir }}/package.json"
+
+      - name: Upload platform artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-${{ matrix.platform_dir }}
+          path: native/npm/${{ matrix.platform_dir }}
+          if-no-files-found: error
