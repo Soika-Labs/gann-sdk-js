@@ -57,6 +57,11 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Validate npm token
+        run: node -e "if(!process.env.NODE_AUTH_TOKEN){throw new Error('Missing secrets.NPM_TOKEN in workflow environment')}"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Publish platform package
         run: npm run publish:platform
         working-directory: native
@@ -86,6 +91,11 @@ jobs:
       - name: Configure npm auth
         run: |
           node -e "const fs=require('fs');const os=require('os');const path=require('path');const npmrc=path.join(os.homedir(),'.npmrc');fs.appendFileSync(npmrc,`//registry.npmjs.org/:_authToken=${process.env.NODE_AUTH_TOKEN}\nalways-auth=true\n`);"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Validate npm token
+        run: node -e "if(!process.env.NODE_AUTH_TOKEN){throw new Error('Missing secrets.NPM_TOKEN in workflow environment')}"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

@@ -34,6 +34,11 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Validate npm token
+        run: node -e "if(!process.env.NODE_AUTH_TOKEN){throw new Error('Missing secrets.NPM_TOKEN in workflow environment')}"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Publish SDK
         run: npm run publish:sdk:npm
         env:
