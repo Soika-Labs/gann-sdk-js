@@ -32,7 +32,7 @@ jobs:
 
       - name: Configure npm auth
         run: |
-          node -e "const fs=require('fs');const os=require('os');const path=require('path');const token=process.env.NODE_AUTH_TOKEN;if(!token) throw new Error('Missing NODE_AUTH_TOKEN');const npmrc=path.join(os.homedir(),'.npmrc');fs.appendFileSync(npmrc,'//registry.npmjs.org/:_authToken='+token+'\nalways-auth=true\n');"
+          node -e "const fs=require('fs');const os=require('os');const path=require('path');const token=process.env.NODE_AUTH_TOKEN;if(!token) throw new Error('Missing NODE_AUTH_TOKEN');const npmrc=process.env.NPM_CONFIG_USERCONFIG || path.join(os.homedir(),'.npmrc');fs.appendFileSync(npmrc,'//registry.npmjs.org/:_authToken='+token+'\nalways-auth=true\n');"
 
       - name: Validate npm token
         run: node -e "if(!process.env.NODE_AUTH_TOKEN){throw new Error('Missing repository secret NPM_TOKEN in workflow environment')}"
