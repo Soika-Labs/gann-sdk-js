@@ -1,5 +1,5 @@
 {
-  "name": "@soika/gann-sdk-quic-native-linux-x64-gnu",
+  "name": "gann-sdk-quic-native-linux-x64-gnu",
   "version": "0.1.1",
   "os": [
     "linux"
@@ -11,7 +11,7 @@
   "files": [
     "gann_js_quic_native.linux-x64-gnu.node"
   ],
-  "description": "Native (Rust) QUIC bindings for @soika/gann-sdk (prebuilt via napi-rs)",
+  "description": "Native (Rust) QUIC bindings for gann-sdk (prebuilt via napi-rs)",
   "license": "Apache-2.0",
   "libc": [
     "glibc"

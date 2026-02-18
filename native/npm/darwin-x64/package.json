@@ -1,5 +1,5 @@
 {
-  "name": "@soika/gann-sdk-quic-native-darwin-x64",
+  "name": "gann-sdk-quic-native-darwin-x64",
   "version": "0.1.1",
   "os": [
     "darwin"
@@ -11,6 +11,6 @@
   "files": [
     "gann_js_quic_native.darwin-x64.node"
   ],
-  "description": "Native (Rust) QUIC bindings for @soika/gann-sdk (prebuilt via napi-rs)",
+  "description": "Native (Rust) QUIC bindings for gann-sdk (prebuilt via napi-rs)",
   "license": "Apache-2.0"
 }

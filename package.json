@@ -1,5 +1,5 @@
 {
-  "name": "@soika/gann-sdk",
+  "name": "gann-sdk",
   "version": "0.1.1",
   "description": "JavaScript/TypeScript SDK for the Global Agentic Neural Network (GANN)",
   "type": "module",
