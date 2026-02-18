@@ -29,7 +29,7 @@
     "ws": "^8.18.0"
   },
   "optionalDependencies": {
-    "@soika/gann-sdk-quic-native": "0.1.1"
+    "gann-sdk-quic-native": "0.1.1"
   },
   "devDependencies": {
     "@types/node": "^20.10.5",
