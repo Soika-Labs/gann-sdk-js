@@ -1,6 +1,6 @@
 {
   "name": "gann-sdk",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "JavaScript/TypeScript SDK for the Global Agentic Neural Network (GANN)",
   "type": "module",
   "main": "dist/index.js",
