@@ -1,6 +1,6 @@
 # GANN JavaScript SDK (`gann-sdk`)
 
-TypeScript-first SDK for the Global Agentic Neural Network (GANN): agent discovery,
+TypeScript-first SDK for the Global Agentic Neural Network : agent discovery,
 schema validation, heartbeat/signaling, and QUIC direct-first sessions with relay fallback.
 
 Published package: `gann-sdk`
