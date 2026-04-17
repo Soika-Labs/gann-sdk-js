@@ -45,7 +45,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install native dependencies
-        run: npm ci --omit=optional
+        run: npm install --omit=optional
         working-directory: native
 
       - name: Build and prepare npm artifacts
@@ -90,7 +90,7 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: Install native dependencies
-        run: npm ci --omit=optional
+        run: npm install --omit=optional
         working-directory: native
 
       - name: Configure npm auth (npmjs)
