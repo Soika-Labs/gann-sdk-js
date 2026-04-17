@@ -15,10 +15,13 @@ export type QuicDirectFirstOptions = {
   directBindAddr?: string;
   relayBindAddr?: string;
   advertisedCandidates?: string[];
+  stunServers?: string[];
 
   /** Token returned by `/.gann/ws/token` (same token used for signaling). */
   token: string;
 };
+
+const DEFAULT_STUN_SERVERS = ["stun:stun.l.google.com:19302", "stun:stun.cloudflare.com:3478"];
 
 export type QuicDirectFirstResult =
   | {
@@ -58,6 +61,74 @@ function isAnswerPayload(event: SignalingEvent): event is SignalingEvent & { pay
 
 function isOfferPayload(event: SignalingEvent): event is SignalingEvent & { payload: { kind: "quic_offer"; offer: unknown } } {
   return event.payload?.kind === "quic_offer";
+}
+
+function isCandidatePayload(
+  event: SignalingEvent,
+): event is SignalingEvent & { payload: { kind: "quic_candidate"; candidate: unknown } } {
+  return event.payload?.kind === "quic_candidate";
+}
+
+function parseCandidate(raw: unknown): string | null {
+  if (typeof raw === "string") {
+    const value = raw.trim();
+    return value || null;
+  }
+  if (raw && typeof raw === "object") {
+    const value = String((raw as any).candidate ?? "").trim();
+    return value || null;
+  }
+  return null;
+}
+
+function uniqueCandidates(values: string[]): string[] {
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const raw of values) {
+    const candidate = String(raw ?? "").trim();
+    if (!candidate || seen.has(candidate)) {
+      continue;
+    }
+    seen.add(candidate);
+    out.push(candidate);
+  }
+  return out;
+}
+
+async function sendLocalCandidates(
+  channel: SignalingChannel,
+  sessionId: string,
+  peerAgentId: string,
+  candidates: string[],
+): Promise<void> {
+  for (const candidate of uniqueCandidates(candidates)) {
+    try {
+      channel.sendQuicCandidate(sessionId, peerAgentId, { candidate });
+    } catch {
+      return;
+    }
+  }
+}
+
+async function waitForCandidateEvent(
+  channel: SignalingChannel,
+  sessionId: string,
+  peerAgentId: string,
+  timeoutMs: number,
+): Promise<string | null> {
+  if (timeoutMs <= 0) {
+    return null;
+  }
+  try {
+    const event = await waitForSessionEvent(
+      channel,
+      (ev) => ev.sessionId === sessionId && ev.from === peerAgentId && isCandidatePayload(ev),
+      timeoutMs,
+    );
+    return parseCandidate((event as any).payload.candidate);
+  } catch {
+    return null;
+  }
 }
 
 function parseRelayInfo(raw: unknown): QuicRelayInfo {
@@ -146,7 +217,10 @@ export async function initiateQuicSessionDirectFirst(
   const relayBindAddr = options.relayBindAddr ?? "0.0.0.0:0";
 
   const server = QuicPeerServer.create(directBindAddr);
-  const offer: QuicOffer = server.offer(options.advertisedCandidates);
+  const offer: QuicOffer = {
+    ...server.offer(options.advertisedCandidates),
+    stun_servers: uniqueCandidates(options.stunServers ?? DEFAULT_STUN_SERVERS),
+  };
 
   channel.sendQuicOffer(peerAgentId, offer);
 
@@ -164,6 +238,7 @@ export async function initiateQuicSessionDirectFirst(
 
     // We still want the session id for later bookkeeping; relayEvent will have it.
     const relayEvent = await withTimeout(relayEventPromise, 2000, "session id");
+    await sendLocalCandidates(channel, relayEvent.sessionId, peerAgentId, offer.candidates);
 
     return {
       mode: "direct",
@@ -176,6 +251,7 @@ export async function initiateQuicSessionDirectFirst(
   }
 
   const relayEvent = await relayEventPromise;
+  await sendLocalCandidates(channel, relayEvent.sessionId, peerAgentId, offer.candidates);
   const relayClient = QuicRelayClient.create(relayBindAddr);
   const transport = await relayClient.connectTransport(relayEvent.relay);
   let peerReady = await transport.relayBind(options.token, relayEvent.sessionId);
@@ -220,7 +296,7 @@ export async function respondQuicOfferDirectFirst(
 
   const peerAgentId = offerEvent.from;
   const sessionId = offerEvent.sessionId;
-  const offer = offerEvent.payload.offer as QuicOffer;
+  const baseOffer = offerEvent.payload.offer as QuicOffer;
   const relayTimeoutMs = Math.max(10_000, directTimeoutMs * 5);
 
   const relayEventPromise: Promise<SignalingEvent> =
@@ -233,17 +309,32 @@ export async function respondQuicOfferDirectFirst(
         );
 
   const client = QuicPeerClient.create(directBindAddr);
-  try {
-    const connection = await withTimeout(client.connect(offer), directTimeoutMs, "direct QUIC connect");
-    channel.sendQuicAnswer(sessionId, peerAgentId, { accepted: true, mode: "direct" });
-    return {
-      mode: "direct",
-      sessionId,
-      peerAgentId,
-      connection,
-    };
-  } catch {
-    // fall through to relay
+  const candidates = new Set<string>(uniqueCandidates(baseOffer.candidates ?? []));
+  const connectDeadline = Date.now() + Math.max(0, directTimeoutMs);
+
+  while (Date.now() < connectDeadline && candidates.size > 0) {
+    const offer: QuicOffer = { ...baseOffer, candidates: Array.from(candidates) };
+    try {
+      const remaining = Math.max(1, connectDeadline - Date.now());
+      const connection = await withTimeout(client.connect(offer), remaining, "direct QUIC connect");
+      channel.sendQuicAnswer(sessionId, peerAgentId, { accepted: true, mode: "direct" });
+      return {
+        mode: "direct",
+        sessionId,
+        peerAgentId,
+        connection,
+      };
+    } catch {
+      const remaining = connectDeadline - Date.now();
+      if (remaining <= 0) {
+        break;
+      }
+      const candidate = await waitForCandidateEvent(channel, sessionId, peerAgentId, Math.min(500, remaining));
+      if (!candidate) {
+        break;
+      }
+      candidates.add(candidate);
+    }
   }
 
   const effectiveRelayEvent = await relayEventPromise;

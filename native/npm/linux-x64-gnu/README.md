@@ -1,3 +1,3 @@
-# `@soika/gann-sdk-quic-native-linux-x64-gnu`
+# `gann-sdk-quic-native-linux-x64-gnu`
 
-This is the **x86_64-unknown-linux-gnu** binary for `@soika/gann-sdk-quic-native`
+This is the **x86_64-unknown-linux-gnu** binary for `gann-sdk-quic-native`

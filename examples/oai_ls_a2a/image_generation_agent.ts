@@ -34,6 +34,7 @@ class ImageGenerationAgentApp {
   private async acceptOneSession(): Promise<void> {
     const handle = await this.client.acceptQuicDirectFirst({
       directTimeoutMs: 3_000,
+      directBindAddr: this.config.quicDirectBindAddr,
       offerTimeoutMs: 300_000,
     });
     console.log(`[image-js] session accepted mode=${handle.result.mode} session=${handle.result.sessionId}`);

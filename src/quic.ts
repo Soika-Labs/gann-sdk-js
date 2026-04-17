@@ -8,6 +8,7 @@ export type QuicOffer = {
   fingerprint_sha256: string;
   alpn: string;
   server_name: string;
+  stun_servers?: string[] | null;
   e2ee_pubkey_b64?: string | null;
 };
 
@@ -58,7 +59,7 @@ function loadNative(): Native {
   // Preferred path (production): prebuilt napi-rs package.
   try {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    return require("@soika/gann-sdk-quic-native") as Native;
+    return require("gann-sdk-quic-native") as Native;
   } catch {
     // fall back to local development paths
   }
@@ -79,7 +80,7 @@ function loadNative(): Native {
   }
 
   throw new Error(
-    "JS QUIC native module not found. Install the prebuilt binary via `npm install @soika/gann-sdk-quic-native` " +
+    "JS QUIC native module not found. Install the prebuilt binary via `npm install gann-sdk-quic-native` " +
       "(recommended), or build it via `cargo build --release` in client/js-sdk/native, or set GANN_JS_QUIC_NATIVE_PATH " +
       "to a built .node file."
   );

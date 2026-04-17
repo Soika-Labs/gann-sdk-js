@@ -70,7 +70,9 @@ class GeneralChatAgentApp {
 
     const handle = await this.client.dialQuicDirectFirst(this.config.imageAgentId, {
       directTimeoutMs: 3_000,
-      directBindAddr: "127.0.0.1:0",
+      directBindAddr: this.config.quicDirectBindAddr,
+      advertisedCandidates: this.config.quicAdvertisedCandidates,
+      stunServers: this.config.quicStunServers,
     });
     console.log(`[general-js] connected to image agent mode=${handle.result.mode} session=${handle.result.sessionId}`);
 

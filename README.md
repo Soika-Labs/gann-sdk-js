@@ -1,33 +1,33 @@
-# GANN JavaScript SDK (`@soika/gann-sdk`)
+# GANN JavaScript SDK (`gann-sdk`)
 
 TypeScript-first SDK for the Global Agentic Neural Network (GANN): agent discovery,
 schema validation, heartbeat/signaling, and QUIC direct-first sessions with relay fallback.
 
-Published package: `@soika/gann-sdk`
+Published package: `gann-sdk`
 
 ## Compatibility
 
 - Runtime: Node.js 18+
 - Language: TypeScript / JavaScript (ESM)
 - Core transport deps: native `fetch`, `ws`
-- Optional QUIC native module: `@soika/gann-sdk-quic-native`
+- Optional QUIC native module: `gann-sdk-quic-native`
 
 ## Installation
 
 Core SDK:
 
 ```bash
-npm install @soika/gann-sdk
+npm install gann-sdk
 # or
-pnpm add @soika/gann-sdk
+pnpm add gann-sdk
 ```
 
 With QUIC native support:
 
 ```bash
-npm install @soika/gann-sdk @soika/gann-sdk-quic-native
+npm install gann-sdk gann-sdk-quic-native
 # or
-pnpm add @soika/gann-sdk @soika/gann-sdk-quic-native
+pnpm add gann-sdk gann-sdk-quic-native
 ```
 
 ## Environment variables
@@ -52,7 +52,7 @@ pnpm add @soika/gann-sdk @soika/gann-sdk-quic-native
 ## Quick start (search + schema)
 
 ```ts
-import { GannClient } from "@soika/gann-sdk";
+import { GannClient } from "gann-sdk";
 
 const client = new GannClient({
   apiKey: process.env.GANN_API_KEY,
@@ -76,7 +76,7 @@ if (result.agents.length > 0) {
 ## Agent runtime lifecycle
 
 ```ts
-import { GannClient, LoadTracker } from "@soika/gann-sdk";
+import { GannClient, LoadTracker } from "gann-sdk";
 
 const agentId = "00000000-0000-0000-0000-000000000000";
 
@@ -96,7 +96,7 @@ client.disconnect();
 ## Schema validation helpers
 
 ```ts
-import { GannClient, SchemaValidationError } from "@soika/gann-sdk";
+import { GannClient, SchemaValidationError } from "gann-sdk";
 
 const client = new GannClient({ apiKey: process.env.GANN_API_KEY });
 const peerAgentId = "11111111-1111-1111-1111-111111111111";
@@ -119,7 +119,7 @@ try {
 ## Signaling usage
 
 ```ts
-import { GannClient } from "@soika/gann-sdk";
+import { GannClient } from "gann-sdk";
 
 const client = new GannClient({
   apiKey: process.env.GANN_API_KEY,
@@ -147,13 +147,13 @@ channel.on("heartbeat", (event) => {
 Install QUIC native package first:
 
 ```bash
-npm install @soika/gann-sdk-quic-native
+npm install gann-sdk-quic-native
 ```
 
 ### Initiator flow
 
 ```ts
-import { GannClient } from "@soika/gann-sdk";
+import { GannClient } from "gann-sdk";
 
 const client = new GannClient({
   apiKey: process.env.GANN_API_KEY,
@@ -182,7 +182,7 @@ client.disconnect();
 ### Responder flow
 
 ```ts
-import { GannClient } from "@soika/gann-sdk";
+import { GannClient } from "gann-sdk";
 
 const client = new GannClient({
   apiKey: process.env.GANN_API_KEY,
@@ -254,8 +254,8 @@ npm run test:full-flow
 Release order is important:
 
 1. Publish native platform packages (`darwin-x64`, `linux-x64-gnu`, `win32-x64-msvc`).
-2. Publish main native package (`@soika/gann-sdk-quic-native`).
-3. Publish SDK package (`@soika/gann-sdk`).
+2. Publish main native package (`gann-sdk-quic-native`).
+3. Publish SDK package (`gann-sdk`).
 
 ### One-time setup
 

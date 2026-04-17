@@ -17,7 +17,7 @@ function resolveTriple() {
 }
 
 function resolvePlatformPackageName() {
-	return `@soika/gann-sdk-quic-native-${resolveTriple()}`;
+	return `gann-sdk-quic-native-${resolveTriple()}`;
 }
 
 // Preferred path (published): platform-specific optional dependency package.
