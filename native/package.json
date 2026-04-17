@@ -1,6 +1,6 @@
 {
   "name": "gann-sdk-quic-native",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Native (Rust) QUIC bindings for gann-sdk (prebuilt via napi-rs)",
   "license": "Apache-2.0",
   "type": "commonjs",
@@ -28,8 +28,8 @@
     }
   },
   "optionalDependencies": {
-    "gann-sdk-quic-native-win32-x64-msvc": "0.2.0",
-    "gann-sdk-quic-native-darwin-arm64": "0.2.0",
-    "gann-sdk-quic-native-linux-x64-gnu": "0.2.0"
+    "gann-sdk-quic-native-win32-x64-msvc": "0.3.0",
+    "gann-sdk-quic-native-darwin-arm64": "0.3.0",
+    "gann-sdk-quic-native-linux-x64-gnu": "0.3.0"
   }
 }
