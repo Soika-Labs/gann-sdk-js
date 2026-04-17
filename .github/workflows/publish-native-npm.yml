@@ -33,10 +33,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org
@@ -45,7 +45,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install native dependencies
-        run: npm ci
+        run: npm ci --omit=optional
         working-directory: native
 
       - name: Build and prepare npm artifacts
@@ -81,16 +81,16 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org
 
       - name: Install native dependencies
-        run: npm ci
+        run: npm ci --omit=optional
         working-directory: native
 
       - name: Configure npm auth (npmjs)
