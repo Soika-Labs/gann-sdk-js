@@ -253,7 +253,7 @@ npm run test:full-flow
 
 Release order is important:
 
-1. Publish native platform packages (`darwin-x64`, `linux-x64-gnu`, `win32-x64-msvc`).
+1. Publish native platform packages (`darwin-arm64`, `linux-x64-gnu`, `win32-x64-msvc`).
 2. Publish main native package (`gann-sdk-quic-native`).
 3. Publish SDK package (`gann-sdk`).
 

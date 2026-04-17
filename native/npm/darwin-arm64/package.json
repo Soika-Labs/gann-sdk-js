@@ -1,15 +1,15 @@
 {
-  "name": "gann-sdk-quic-native-darwin-x64",
+  "name": "gann-sdk-quic-native-darwin-arm64",
   "version": "0.2.0",
   "os": [
     "darwin"
   ],
   "cpu": [
-    "x64"
+    "arm64"
   ],
-  "main": "gann_js_quic_native.darwin-x64.node",
+  "main": "gann_js_quic_native.darwin-arm64.node",
   "files": [
-    "gann_js_quic_native.darwin-x64.node"
+    "gann_js_quic_native.darwin-arm64.node"
   ],
   "description": "Native (Rust) QUIC bindings for gann-sdk (prebuilt via napi-rs)",
   "license": "Apache-2.0"

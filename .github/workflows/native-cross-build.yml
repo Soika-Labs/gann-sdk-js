@@ -22,7 +22,7 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            platform_dir: darwin-x64
+            platform_dir: darwin-arm64
           - os: ubuntu-latest
             platform_dir: linux-x64-gnu
           - os: windows-latest

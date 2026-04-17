@@ -35,19 +35,33 @@ function main() {
     ? [process.env.npm_execpath, "publish", packageDir, "--access", "public"]
     : ["publish", packageDir, "--access", "public"];
 
-  try {
-    execFileSync(npmBin, args, {
-      stdio: "inherit",
-      env: {
-        ...process.env,
-        NODE_AUTH_TOKEN: token,
-        NPM_CONFIG_USERCONFIG: npmrcPath,
-      },
-    });
-  } finally {
-    if (fs.existsSync(npmrcPath)) {
-      fs.rmSync(npmrcPath);
+  const maxRetries = 3;
+  const retryDelayMs = 15_000;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      execFileSync(npmBin, args, {
+        stdio: "inherit",
+        env: {
+          ...process.env,
+          NODE_AUTH_TOKEN: token,
+          NPM_CONFIG_USERCONFIG: npmrcPath,
+        },
+      });
+      break;
+    } catch (err) {
+      const isRetryable = err.status === 1 && attempt < maxRetries;
+      if (isRetryable) {
+        console.log(`Publish attempt ${attempt} failed. Retrying in ${retryDelayMs / 1000}s...`);
+        Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, retryDelayMs);
+      } else {
+        throw err;
+      }
     }
+  }
+
+  if (fs.existsSync(npmrcPath)) {
+    fs.rmSync(npmrcPath);
   }
 }
 
